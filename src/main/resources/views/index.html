@@ -1,0 +1,418 @@
+<html>
+<head>
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css"
+    />
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', serif;
+        }
+    </style>
+    <title>Weather App!</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg" style="position: absolute; background-color: transparent">
+    <div class="container-fluid">
+        <img style="width: 10vw; margin-top: 0" class="mt-1 me-3 ms-3" id="type" src="" alt="type">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown align-self-center">
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Select City
+                    </a>
+                    <ul class="dropdown-menu" style="width: 200px" id="drop">
+                        <input type="text" placeholder="Search city" name="kota" class="form-control ms-2 me-2 w-75" id="src">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown align-self-center">
+                    <a class="nav-link dropdown-toggle text-white " href="#" role="button" data-bs-toggle="modal" data-bs-target="#exampleModal" aria-expanded="false">
+                        Add city
+                    </a>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add City</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="myForm" action="/submit" method="post">
+                                        <div class="mb-3">
+                                            <label for="kota" class="col-form-label">Kabupaten Name (you can search it here) :</label>
+                                            <input type="text" name="kota" class="form-control" id="kota">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="longg" class="col-form-label">Longitude : </label>
+                                            <input type="text" name="longg" class="form-control" id="longg" step="any">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="lat" class="col-form-label">Latitude : </label>
+                                            <input type="text" name="lat" class="form-control" id="lat" step="any">
+                                        </div>
+                                        <p> Or you can choose it on the map below : </p>
+                                        <div id="map" style="width: 465px; height: 300px; border-radius: 7px"></div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <button type="button" style="margin-left: 50vw"  class="btn btn-transparent text-white "data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+                    Dokumentasi Program
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel1">Dokumentasi Program</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body ">
+                                <div style="text-align: justify">
+                                    <h4>1. Pengantar</h4>
+                                    <p>- Program ini merupakan web yang menampilkan informasi cuaca dan waktu untuk lokasi tertentu.</p>
+                                    <p>- Web ini terdiri dari dua bagian utama: Front end dan Back end.</p>
+
+                                    <h4>2. Front-end</h4>
+                                    <p>- Front-end web ini dibuat menggunakan HTML, CSS, JavaScript (JQuery), dan framework Bootstrap.</p>
+                                    <p>- Bootstrap digunakan untuk membuat tampilan pengguna yang responsif dan modern.</p>
+                                    <p>- Jquery dan AJAX  digunakan untuk melakukan request ke server dan memperbarui data di halaman web secara asinkron tanpa memuat ulang halaman secara keseluruhan.</p>
+                                    <p>Selain itu web ini juga menggunakan service map dari tomtom, map ini berfungsi untuk memvisualisasikan longitude dan latitude dan memiliih lokasi</p>
+
+                                    <p>- Fungsi-fungsi utama pada script js:</p>
+                                    <ul>
+                                        <li><code>initMap()</code>: Menampilkan peta dan menambahkan marker dari service tomtom yang dapat digerakkan. Marker ini digunakan untuk memilih lokasi baru dengan mengklik pada peta atau dengan memasukkan nama kota.</li>
+                                        <li><code>get_main()</code>: Melakukan permintaan AJAX ke beberapa endpoint API untuk mendapatkan data cuaca, nama lokasi, waktu saat ini, dan daftar lokasi yang tersedia.</li>
+                                        <li><code>buatDaftarKota()</code>: Membuat daftar kota dropdown untuk memilih lokasi yang tersedia.</li>
+                                        <li>Event listener pada <code>#src</code> (input pencarian) untuk memfilter daftar kota berdasarkan kata kunci yang dimasukkan.</li>
+                                    </ul><br>
+
+                                    <h4>3. Back-end</h4>
+                                    <p>- Back-end aplikasi ini dibangun menggunakan Java dan framework Javalin.</p>
+                                    <p>- Javalin adalah framework ringan untuk membangun aplikasi web dengan Java.</p>
+                                    <p>- Program ini dibuat menggunakan dependency dibawah ini:</p>
+                                    <ul>
+                                        <li><strong>Unirest</strong>: Library untuk melakukan permintaan HTTP dan bekerja dengan API eksternal.</li>
+                                        <li><strong>Gson</strong>: Library untuk mengonversi objek Java ke JSON dan sebaliknya.</li>
+                                        <li><strong>Freemarker</strong>: Template untuk membangun tampilan HTML secara dinamis.</li>
+                                    </ul>
+                                    <p>- File utama back-end: <code>Main.java</code></p>
+                                    <p>- Fungsi-fungsi utama pada <code>Main.java</code>:</p>
+                                    <ul>
+                                        <li><code>getMain()</code>: Mengambil data suhu, kelembaban, dan tekanan udara dari API cuaca.</li>
+                                        <li><code>getName()</code>: Mengambil nama lokasi saat ini dari API cuaca.</li>
+                                        <li><code>getTime()</code>: Mengambil informasi waktu saat ini dari API waktu.</li>
+                                        <li><code>getWeather()</code>: Mengambil data cuaca saat ini, seperti deskripsi cuaca, ikon cuaca, dan informasi lainnya dari API cuaca.</li>
+                                        <li><code>getLokasi()</code>: Mengambil daftar lokasi yang telah ditambahkan oleh pengguna dan menyiapkan URL untuk mengakses API cuaca dan waktu untuk setiap lokasi.</li>
+                                    </ul>
+                                    <p>- Rute API yang disediakan:</p>
+                                    <ul>
+                                        <li><code>/api/lokasi</code>: Mengembalikan daftar lokasi yang telah ditambahkan oleh pengguna.</li>
+                                        <li><code>/api/name</code>: Mengembalikan nama lokasi saat ini.</li>
+                                        <li><code>/api/main_now_mapping</code>: Mengembalikan informasi suhu, kelembaban, dan tekanan udara untuk lokasi saat ini.</li>
+                                        <li><code>/api/weather_now</code>: Mengembalikan informasi cuaca saat ini, seperti deskripsi cuaca, ikon cuaca, dan informasi lainnya.</li>
+                                        <li><code>/api/time</code>: Mengembalikan informasi waktu saat ini untuk lokasi yang dipilih.</li>
+                                    </ul><br>
+
+                                    <h4>4. Alur Program</h4>
+                                    <p>- Ketika aplikasi dijalankan, program akan memuat data lokasi default (koordinat latitude dan longitude) dan membuat URL untuk mengakses API cuaca dan waktu.</p>
+                                    <p>- Halaman utama aplikasi akan menampilkan informasi cuaca dan waktu untuk lokasi default, serta peta untuk memilih lokasi baru.</p>
+                                    <p>- Pengguna dapat menambahkan lokasi baru dengan mengklik pada peta atau memasukkan nama kota.</p>
+                                    <p>- Ketika pengguna menambahkan lokasi baru, data lokasi akan disimpan dalam struktur data JSON di sisi server.</p>
+                                    <p>- Pengguna dapat mengklik tautan untuk mengganti lokasi yang ditampilkan.</p>
+                                    <p>- Ketika pengguna mengklik tautan untuk mengganti lokasi, aplikasi akan melakukan permintaan AJAX ke server untuk mendapatkan data cuaca dan waktu untuk lokasi yang dipilih.</p>
+                                    <p>- Server akan merespons dengan data cuaca dan waktu dalam format JSON.</p>
+                                    <p>- JavaScript di sisi klien akan memperbarui tampilan pengguna dengan data cuaca dan waktu yang baru.</p>
+
+                                    <h4>5. Struktur File</h4>
+                                    <ul>
+                                        <li><code>Main.java</code>: Berisi kode utama program back-end.</li>
+                                        <li><code>public/</code>: Direktori yang berisi file-file statis front-end, seperti HTML, CSS, JavaScript, dan gambar.</li>
+                                        <li><code>views/</code>: Direktori yang berisi templat HTML yang digunakan oleh Freemarker.</li>
+                                        <br>
+                                    </ul>
+                                    <h4>6. API yang digunakan : </h4>
+                                    <ul>
+                                        <li> Openweather : <code>https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}</code> digunakan untuk mengambil data terkait dengan cuaca yang ada,  seperti cuaca, suhu dan sebagainya. Dari API ini juga dapat digunakan untuk melakukan reverse geocode yaitu dari latitude dan longitude menjadi lokasi</li>
+                                        <li> Openweather : <code>https://api.openweathermap.org/data/2.5/weather?{Lokasi}&appid={APIkey}</code> digunakan untuk mengambil data latitude dan longitude atau biasa disebut geocode</li>
+                                        <li> TimeAPI : <code>https://timeapi.io/api/Time/current/coordinate?latitude={lalitude}&longitude={longitude}</code> digunakan untuk mengambil data waktu dari sebuah lokasi dengan menggunakan latitude dan longitufe yang sudah dikirim</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal"><span class="h5">Selesai</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-transparent text-white "data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Ide Program
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Ide Program</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body ">
+                                <p class="h6" style="text-align: justify">Web ini merupakan web yang ditujukan untuk para pemain game Pokemon Go (POGO). Pada masa sekarang ini bermain POGO sudah tidak harus secara langsung menggunakan GPS sesuai lokasi kita. Kita dapat bermain POGO dimanapun tanpa kita harus berpindah lokasi. Walaupun ini merupakan tindakan illegal alias cheat, tidak dapat dipungkiri bahwa banyak para player yang menggunkana metode ini karena memudahkan kita dalam bermain tanpa harus keluar rumah dan bahkan kita bisa pergi ke negara mana saja. <br><br> Dalam POGO ini terdapat beberapa atribut yang sangat berpengaruh terhadap gameplay didalam game terutama saat menggunakan cheat ini. Contohnya adalah cuaca, waktu, hari, latitude, dan longitude<br><br> Untuk cuaca sendiri disini berpengaruh pada Combat Power, Level, dan tipe pokemon apa yang tersedia atau muncul dalam cuaca tersebut. Setiap masing-masing tipe memiliki kecocokan dengan cuacanya sendiri<br><br>Kemudian untuk waktu, waktu ini sangat berpengaruh pada gameplay. Karena semua event dalam game ini diatur berdasarkan lokal waktu pada masing-masing zona waktu. Jadi misal ada event pukul 6 sore WIB dan kita tidak sempat mengikuti event di jam tersebut di Indonesia dan sekarang pukul 7, kita dapat mencari dan berpindah ke negara lain yang zona waktunya masih pukul 6 sore, yaitu bisa Singapura<br><br>Latitude dan longitude berguna untuk mengetahui lokasi pada suatu pokemon. Game ini memiliki sebuah komunitas tersendiri, tak jarang orang-orang membagikan lokasi dari sebuah pokemon langka agar semua orang bisa teleport dan juga ikut menangkapnya. Kebanyakan player dalam membagikan lokasi mereka membagikannya melalui koordinat dari pokemon tersebut<br><br>Lalu kenapa web ini dibuat? web ini dibuat untuk memudahkan para player untuk mencari cuaca dan waktu yang pas seperti yang para player butuhkan. Dalam menggunakan cheat ini terdapat softban yang akan diterapkan kedalam akun setelah berteleportasi. Saat terkena softban (ban sementara) akun game tidak akan bisa menangkap pokemon atau melakukan interkasi lainnya. Oleh karena itu web ini mencegah para player untuk teleport langsung didalam game hanya untuk mengecek cuaca dan waktu yang akan menyebabkan softban pada akun mereka</p>
+                                <div class="container-fluid text-center">
+                                    <img src="/img/weather.png" alt="weather" style="width: 40%;">
+                                    <img src="/img/event.png" alt="weather" style="width: 40%;">
+                                    <img src="/img/koor.png" alt="weather" style="width: 40%;">
+                                    <img src="/img/softban.jpg" alt="weather" style="width: 40%;">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary text-white"><span class="h5" data-bs-dismiss="modal">Selesai</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid" style="height: 100vh" id="main">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col align-self-center">
+            <div class="card" style=" margin-left: 80px; width: 70%; height: 60%; background-color: transparent; border: none">
+                <img id="img" src="" class="card-img-top" alt="...">
+                <h1 class="text-center text-white" style="margin-bottom: 0px; font-size: 70px"><span id="jam"></span>:<span id="menit"></span>:<span id="detik"></span></h1>
+                <p class="text-center" style="font-size: 14px; margin-bottom: 0"><span id="hari"></span>, <span id="tanggal"></span></p>
+                <div class="card-body">
+                    <h5 class="card-title h3 text-white text-center" id="c"></h5>
+                    <p class="card-text text-white h5" id="d">
+                    <ul>
+                        <li>
+                            Current temperature : <span id="w"></span>&deg;C
+                        </li>
+                        <li>
+                            Temperature feels like : <span id="f"></span>&deg;C
+                        </li>
+                    </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/jquery-3.7.1.min.js"></script>
+<script src="js/jso.js"></script>
+
+<script>
+    let nama;
+    let img;
+    let kotas = []
+    let typeimg
+
+    $(function (){
+        let objCnt = 0;
+        let isi;
+
+        setInterval(get_time, 1000);
+        get_main();
+
+    });
+    const modal = document.getElementById('exampleModal');
+
+    modal.addEventListener('shown.bs.modal', () => {
+        initMap();
+    });
+
+    function buatDaftarKota(kotas){
+        $('ul#drop li').remove()
+        for (let i =0; i < kotas.length; i++){
+            $("#drop").append('<li style="display: flex;"><a class="dropdown-item"" href="/switch/' + kotas[i] + '"><button class="btn btn-primary mt-1">' + kotas[i] +'</button></a></li>');
+        }
+    }
+
+        $('#src').on('keyup', function() {
+            const keyword = $(this).val().toLowerCase();
+            const kotaFilter = kotas.filter(kota => kota.toLowerCase().includes(keyword));
+            buatDaftarKota(kotaFilter);
+
+            timeout = setTimeout(() => {
+                buatDaftarKota(kotas);
+            }, 10000);
+        });
+
+
+    function initMap() {
+        let center = [110.335403, -7.716165];
+        const keyy = "2xCMzQiwdrBOTZYoXosJUOU0Qdef3Fga"
+        var map = tt.map({
+            key: keyy,
+            container: "map",
+            center: center,
+            zoom: 5
+        });
+
+        map.on('load', () => {
+            let marker = new tt.Marker().setLngLat(center).addTo(map);
+
+            map.on('click', (e) => {
+                const { lng, lat } = e.lngLat;
+                $('#lat').val(lat);
+                $('#longg').val(lng);
+                marker.setLngLat([lng, lat]);
+                $.ajax({
+                    url: "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"6&lon="+lng+"&appid=bc7e68cbc3c0c6ed0d691481e40339ff",
+                    success: function (result) {
+                        const localName = result.name;
+                        console.log(localName);
+                        $('#kota').val(localName);
+                    }
+                })
+            });
+            $('#kota').keyup(() => {
+                let kota = $('#kota').val();
+                $.ajax({
+                    url: "https://api.openweathermap.org/data/2.5/weather?q="+kota+"&appid=bc7e68cbc3c0c6ed0d691481e40339ff",
+                    success: function (result) {
+                        const lattt = result.coord.lat;
+                        const lngg = result.coord.lon;
+                        $('#lat').val(lattt);
+                        $('#longg').val(lngg);
+                        marker.setLngLat([lngg, lattt]);
+                        map.setCenter([lngg, lattt]);
+                    }
+                })
+            });
+        });
+
+    }
+
+    function get_main(){
+        $('#w, #f, #c, #d').html('');
+        $.ajax({
+            url: "api/main_now_mapping",
+            success: function (result) {
+                $('#w').html(Math.round(result.data.temp - 273));
+                $('#f').html(Math.round(result.data.feels_like - 273));
+            }
+        });
+        $.ajax({
+            url: "api/name",
+            success: function (result) {
+                nama = result.data.name;
+                console.log(nama)
+            }
+        })
+
+        $.ajax({
+            url: "api/time",
+            success: function (result) {
+                let hour = result.data.hour;
+                $('#jam').html(result.data.hour);
+                $('#menit').html(result.data.minute);
+                $('#hari').html(result.data.dayOfWeek);
+                $('#tanggal').html(result.data.date);
+
+                if (hour >= 3 && hour < 6){
+                    img = "/img/dawn.jpg"
+                } else if (hour >= 6 && hour < 9){
+                    img = "/img/morning.jpg"
+                } else if (hour >= 9 && hour < 15){
+                    img = "img/noon2.jpg"
+                } else if (hour >= 15 && hour < 18){
+                    img = "img/dusk.jpg"
+                } else if (hour >= 18 && hour < 24){
+                    img = "img/evening.jpg"
+                } else if (hour >= 0 && hour < 3){
+                    img = "img/midnight.jpg"
+                }
+                $("#main").css({
+                    "background-image": "url("+img+")",
+                    "background-size" : "100% auto",
+                    "background-position" : "center",
+                    "background-repeat" : "no-repeat"
+                });
+            }
+        })
+
+        $.ajax({
+            url: "api/lokasi"
+        })
+            .then(function (lokasiResult) {
+                // Permintaan kedua ke api/weather_now
+                objCnt = lokasiResult.data.length
+                console.log(objCnt)
+                return $.ajax({
+                    url: "api/weather_now"
+                })
+                    .then(function (weatherResult) {
+                        $('ul#drop li').remove()
+                        // Mengakses data dari kedua respons API
+                        var cuaca = weatherResult.data.description
+                        var main = weatherResult.data.main
+                        if (cuaca == "clear sky"){
+                            typeimg = "img/clear.png";
+                        } else if (cuaca == "few clouds"){
+                            typeimg = "img/berawan2.png"
+                        } else if (cuaca == "scattered clouds" || cuaca == "broken clouds" || cuaca == "overcast clouds"){
+                            typeimg = "img/berawan.png"
+                        } else if (main == "Rain"){
+                            typeimg = "img/rainy.png"
+                        } else if (main == "Thunderstorm") {
+                            typeimg = "img/windy.png"
+                        } else if (cuaca == "snow"){
+                            typeimg = "img/snow.png"
+                        } else if (cuaca == "mist" || cuaca == "haze"){
+                            typeimg = "img/kabut.png"
+                        }
+
+                        $("#type").attr("src", typeimg);
+
+                        if (objCnt === 0){
+                            $("#drop").append('<li><a class="dropdown-item">No data yet</a></li>');
+                        }
+
+                        for (let i = 0; i < objCnt; i++){
+                            kotas.push(lokasiResult["data"][i]["kota"]);
+                        }
+
+                        kotas.sort();
+
+                        buatDaftarKota(kotas)
+                        var icon = weatherResult.data.icon;
+                        // Menampilkan data
+                        $("#img").attr("src", "https://openweathermap.org/img/wn/" + icon + "@4x.png");
+                        $('#c').html(nama + " is currently " + weatherResult.data.description);
+                    });
+            })
+    }
+
+    function get_time(){
+        const date = new Date;
+        $('#detik').html(date.getSeconds());
+    }
+
+</script>
+</body>
+</html>
